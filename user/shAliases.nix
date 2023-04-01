@@ -23,6 +23,7 @@
     "clr" = "reset; clear";
     "mnt" = "doas mount --mkdir";
     "ejc" = "doas umount --quiet --recursive";
+    "mnt.zfs" = "mnt -t zfs";
     "rlsh" = "exec $SHELL";
     "sudo" = "doas";
     "redoas" = "doas !!";

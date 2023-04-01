@@ -47,7 +47,8 @@
     # };
     settings = {
       # auto-optimise-store = true;
-      system-features = ["big-parallel" "kvm" "recursive-nix" "nix-command"];
+      system-features = ["big-parallel" "kvm" "recursive-nix"];
+      experimental-features = ["nix-command" "flakes"];
       substituters = [
         "https://nix-community.cachix.org"
         "https://cache.nixos.org/"
@@ -73,6 +74,7 @@
       wget
       axel
       rsync
+      zip
       lsd
       exa
       oil
@@ -83,6 +85,7 @@
       ripgrep
       zstd
       file
+      lsof
       jq
       yq
       jo
@@ -123,6 +126,7 @@
       cod
       btop
       tiptop
+      catcli
     ];
 
   boot.initrd.availableKernelModules = ["xhci_pci" "nvme"];
@@ -165,6 +169,7 @@
   services.upower.enable = true;
   services.logind.lidSwitch = "hybrid-sleep";
   services.logind.lidSwitchExternalPower = "suspend"; #ignore
+  services.syncthing.enable = true;
 
   # virtualisation.virtualbox.host.enable = true;
   # virtualisation.virtualbox.host.enableExtensionPack = true;

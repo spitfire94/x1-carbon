@@ -222,6 +222,8 @@ in {
   programs.nix-index.enable = true;
   programs.yt-dlp.enable = true;
   services.caffeine.enable = true;
+  services.syncthing.enable = true;
+  services.syncthing.tray.enable = true;
 
   fonts.fontconfig.enable = true;
   wayland.windowManager.sway.enable = true;

@@ -16,7 +16,7 @@ in {
     enable = true;
     extraEnv = ''
       mkdir ${config.xdg.cacheHome}/starship
-      starship init nu | save ${config.xdg.cacheHome}/starship/init.nu
+      # starship init nu | save ${config.xdg.cacheHome}/starship/init.nu
 
       # let-env STARSHIP_SHELL = "nu"
 

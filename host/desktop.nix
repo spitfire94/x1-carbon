@@ -81,7 +81,7 @@ in {
       fullscreen-notifications
       dash2dock-lite
       all-ip-addresses
-    ];
+    ] ++ [pkgs.gnome.gnome-characters];
 
   environment.gnome.excludePackages =
     (with pkgs; [
@@ -90,7 +90,7 @@ in {
     ])
     ++ (with pkgs.gnome; [
       gnome-terminal
-      gnome-characters
+      # gnome-characters
       gnome-music
       cheese # webcam tool
       gedit # text editor

@@ -10,5 +10,6 @@
   environment.systemPackages = with pkgs; [
     android-udev-rules
     android-file-transfer
+    mtpfs
   ];
 }
