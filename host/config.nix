@@ -132,6 +132,7 @@
   boot.initrd.availableKernelModules = ["xhci_pci" "nvme"];
   boot.initrd.kernelModules = ["dm-snapshot"];
   boot.kernelModules = ["kvm-intel"];
+  hardware.cpu.intel.updateMicrocode = true;
 
   documentation = {
     nixos.enable = true;
@@ -139,6 +140,20 @@
     man.enable = true;
     enable = true;
   };
+
+  zramSwap = {
+    enable = true;
+    memoryPercent = 40;
+    priority = 20;
+  };
+
+  programs.mosh.enable = true;
+  services.tailscale.enable = true;
+  services.syncthing.enable = true;
+  services.fwupd.enable = true;
+  services.upower.enable = true;
+  services.logind.lidSwitch = "hybrid-sleep";
+  services.logind.lidSwitchExternalPower = "suspend"; #ignore
 
   services.udev.extraRules = ''
     DRIVERS=="usb-storage", SUBSYSTEMS=="usb", ENV{UDISKS_AUTO}="0", ENV{UDISKS_IGNORE}="1"
@@ -150,29 +165,11 @@
     libinput.enable = true;
   };
 
-  hardware = {
-    video.hidpi.enable = true;
-    cpu.intel.updateMicrocode = true;
-  };
-
-  zramSwap = {
+  services.kubo = {
     enable = true;
-    memoryPercent = 40;
-    priority = 20;
+    localDiscovery = true;
+    startWhenNeeded = true;
   };
-
-  programs.mosh.enable = true;
-  services.tailscale.enable = true;
-  services.fwupd.enable = true;
-  services.kubo.enable = true;
-  services.kubo.autoMount = true;
-  services.upower.enable = true;
-  services.logind.lidSwitch = "hybrid-sleep";
-  services.logind.lidSwitchExternalPower = "suspend"; #ignore
-  services.syncthing.enable = true;
-
-  # virtualisation.virtualbox.host.enable = true;
-  # virtualisation.virtualbox.host.enableExtensionPack = true;
 
   console = {
     packages = [pkgs.terminus_font];
@@ -185,4 +182,7 @@
     networkmanager.enable = true;
     firewall.checkReversePath = "loose";
   };
+
+  # virtualisation.virtualbox.host.enable = true;
+  # virtualisation.virtualbox.host.enableExtensionPack = true;
 }

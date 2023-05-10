@@ -5,10 +5,6 @@
   ...
 }: let
   badge = import ./badge.nix;
-  vivaldi-drm = pkgs.vivaldi.overrideAttrs (old: rec {
-    enableWidevine = true;
-    proprietaryCodecs = true;
-  });
 in {
   imports = [
     ./nushell.nix
@@ -23,7 +19,7 @@ in {
   home.homeDirectory = "/home";
   home.extraOutputsToInstall = ["doc" "info"];
   home.packages = with pkgs; [
-    vivaldi-drm
+    vivaldi
     cool-retro-term
     lolcat
     figlet
@@ -53,6 +49,7 @@ in {
     just
     unzip
     gh
+    whois
   ];
 
   home.sessionVariables = {
@@ -61,7 +58,7 @@ in {
     VISUAL = "vscode";
     NIX_PAGER = "less";
     GNUPGHOME = "${config.xdg.stateHome}/gnupg";
-    NIXOS_CONFIG = "${config.home.homeDirectory}/project/x1-carbon";
+    NIXOS_CONFIG = "${config.home.homeDirectory}/project/thinkpad";
   };
 
   programs.gpg = {
@@ -119,15 +116,6 @@ in {
       revert = "log -1 HEAD";
       cpt = "crypt";
     };
-    # extraConfig = {
-    #   credential."https://github.com.helper" = "!${pkgs.gh}/bin/gh auth git-credential";
-    #   credential."https://gist.github.com.helper" = "!${pkgs.gh}/bin/gh auth git-credential";
-    # };
-    # extraConfig = ''
-      # [credential]
-        # https://github.com.helper = "!gh auth git-credential"
-        # https://gist.github.com.helper = "!gh auth git-credential"
-    # '';
   };
 
   programs.vscode = {
