@@ -15,12 +15,40 @@ let
       (filterAttrs (k: v: v != null) config.home.sessionVariables)
   );
 
+  ohmyposhInit = pkgs.runCommand "oh-my-posh.nu" {} ''
+    ${pkgs.oh-my-posh}/bin/oh-my-posh init --print nu \
+      --config ${pkgs.oh-my-posh}/share/oh-my-posh/themes/${config.programs.oh-my-posh.useTheme}.omp.json \
+      > $out
+  '';
+
+  starshipInit = ''
+    let-env STARSHIP_SHELL = "nu"
+    let-env STARSHIP_SESSION_KEY = (random chars -l 16)
+    let-env PROMPT_MULTILINE_INDICATOR = (^starship prompt --continuation)
+    let-env PROMPT_INDICATOR = ""
+
+    let-env PROMPT_COMMAND = {||
+      let width = (term size).columns
+      ^starship prompt $"--cmd-duration=($env.CMD_DURATION_MS)" $"--status=($env.LAST_EXIT_CODE)" $"--terminal-width=($width)"
+    }
+
+    let-env PROMPT_COMMAND_RIGHT = {||
+      let width = (term size).columns
+      ^starship prompt --right $"--cmd-duration=($env.CMD_DURATION_MS)" $"--status=($env.LAST_EXIT_CODE)" $"--terminal-width=($width)"
+    }
+  '';
+
 in {
 
-  home.packages = with pkgs; [ carapace starship ];
+  home.packages = with pkgs; [ carapace oh-my-posh starship ];
 
   home.file."${config.xdg.configHome}/starship.toml".source =
     pkgs.runCommand "starship.toml" {} "${pkgs.starship}/bin/starship preset pure-preset > $out";
+  
+  programs.oh-my-posh = {
+    enable = true;
+    useTheme = "cobalt2";
+  };
 
   programs.nushell = {
     enable = true;
@@ -28,20 +56,7 @@ in {
     extraEnv = ''
       ${environ}
 
-      let-env STARSHIP_SHELL = "nu"
-      let-env STARSHIP_SESSION_KEY = (random chars -l 16)
-      let-env PROMPT_MULTILINE_INDICATOR = (^starship prompt --continuation)
-      let-env PROMPT_INDICATOR = ""
-
-      let-env PROMPT_COMMAND = {||
-        let width = (term size).columns
-        ^starship prompt $"--cmd-duration=($env.CMD_DURATION_MS)" $"--status=($env.LAST_EXIT_CODE)" $"--terminal-width=($width)"
-      }
-
-      let-env PROMPT_COMMAND_RIGHT = {||
-        let width = (term size).columns
-        ^starship prompt --right $"--cmd-duration=($env.CMD_DURATION_MS)" $"--status=($env.LAST_EXIT_CODE)" $"--terminal-width=($width)"
-      }
+      source ${ohmyposhInit}
 
       let-env GPG_TTY = (tty)
     '';
@@ -83,12 +98,9 @@ in {
         alias sudo = doas 
       }
 
-      alias ed = $env.EDITOR
-      alias vi = $env.VISUAL
-      alias pg = $env.PAGER
-
       alias ll = ls -l
       alias la = ls -a
+      alias lt = exa -Fa --long --git --git-ignore -I '.git*' --tree
 
       # Rebuild and enable nixos configuration
       alias nixos-rb = doas nixos-rebuild boot --flake $env.NIXOS_CONFIG
@@ -104,12 +116,18 @@ in {
 
       # Create one or more directories
       alias mkd = mkdir
+      
+      # Create directory and touch file
+      def mkf [trg] {
+        $trg | path dirname | mkdir $in
+        touch $trg
+      }
 
-      # Create one or more files
-      alias mkf = touch
+      # Create a symbolic link
+      alias mkln = ln -s
 
       # Create a relative symbolic link
-      alias mkl = ln -rs
+      alias mklr = ln -sr
 
       # remove a symbolic link
       alias rmln = unlink
@@ -140,7 +158,7 @@ in {
           zfs set $"($key)=($val)" $trg
         }
       }
-      
+
       # Replace chunks of a repeating character with a single one
       def "str squeeze" [char: string = " "] {
         $in | tr -s $char
