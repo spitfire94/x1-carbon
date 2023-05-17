@@ -46,7 +46,7 @@
     #   oily.flake = inputs.oily;
     # };
     settings = {
-      # auto-optimise-store = true;
+      auto-optimise-store = true;
       system-features = ["big-parallel" "kvm" "recursive-nix"];
       experimental-features = ["nix-command" "flakes"];
       substituters = [

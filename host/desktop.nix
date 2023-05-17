@@ -21,6 +21,11 @@ in {
     desktopManager.gnome.enable = true;
   };
 
+  stylix = { 
+    image = ../user/wallpaper/nasa-x7dstt.jpg;
+    polarity = "dark";
+  };
+
   hardware = {
     pulseaudio.enable = true;
     pulseaudio.package = pkgs.pulseaudioFull;

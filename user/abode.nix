@@ -7,11 +7,13 @@
   badge = import ./badge.nix;
 in {
   imports = [
+    ./stylix.nix
     ./nushell.nix
     ./xdg-dirs.nix
     ./shAliases.nix
   ];
 
+  nixpkgs.config.allowUnfree = true;
   xsession.enable = true;
   news.display = "silent";
   home.username = badge.handle;
@@ -19,6 +21,8 @@ in {
   home.homeDirectory = "/home";
   home.extraOutputsToInstall = ["doc" "info"];
   home.packages = with pkgs; [
+    # nu_scripts-unstable
+    nix-your-shell
     vivaldi
     cool-retro-term
     lolcat
@@ -50,6 +54,9 @@ in {
     unzip
     gh
     whois
+    wemux
+    base16-shell-preview
+    with-shell
   ];
 
   home.sessionVariables = {
@@ -181,9 +188,9 @@ in {
     enableScDaemon = true;
     enableSshSupport = true;
     enableExtraSocket = true;
-    # extraConfig = ''
-    #   ttyname $GPG_TTY
-    # '';
+    extraConfig = ''
+      ttyname $GPG_TTY
+    '';
   };
 
   programs.tmux = {
@@ -212,6 +219,8 @@ in {
   services.caffeine.enable = true;
   services.syncthing.enable = true;
   services.syncthing.tray.enable = true;
+  programs.atuin.enable = true;
+  # services.shellhub-agent.enable = true;
 
   fonts.fontconfig.enable = true;
   wayland.windowManager.sway.enable = true;

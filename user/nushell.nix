@@ -59,6 +59,7 @@ in {
       source ${ohmyposhInit}
 
       let-env GPG_TTY = (tty)
+      let-env SSH_AUTH_SOCK = (gpgconf --list-dirs agent-ssh-socket)
     '';
 
     extraConfig = ''

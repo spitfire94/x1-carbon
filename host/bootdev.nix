@@ -166,7 +166,7 @@ in {
 
     boot.loader.grub = {
       enable = true;
-      version = 2;
+      # version = 2;
       device = "nodev";
       zfsSupport = true;
       efiSupport = true;

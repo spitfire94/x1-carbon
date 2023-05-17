@@ -2,7 +2,7 @@
   description = "Pet machine configuration of spitfire@stargem.xyz";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     home-mgr.url = "github:nix-community/home-manager";
     hardware.url = "github:NixOS/nixos-hardware";
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -10,6 +10,7 @@
     stylix.url = "github:danth/stylix";
     oily.url = "github:StargemSystems/oily";
     home-mgr.inputs.nixpkgs.follows = "nixpkgs";
+    # polymc.url = "github:PolyMC/PolyMC";
   };
 
   outputs = inputs@{ self, ... }: 
@@ -21,6 +22,7 @@
       ];
   
       perSystem = { config, pkgs, final, ... }: {
+        # allowUnfree = true;
         overlayAttrs = {
           inherit (config.packages) vivaldi throttled;
         };
@@ -41,9 +43,20 @@
         modules = [
           inputs.hardware.nixosModules.lenovo-thinkpad-x1-7th-gen
           inputs.home-mgr.nixosModules.default
+          inputs.stylix.nixosModules.stylix
           ./host/config.nix
           ./user/config.nix
         ];
       };
+
+      flake.homeConfigurations.spitfire = inputs.home-mgr.lib.homeManagerConfiguration {
+        pkgs = inputs.nixpkgs;
+        modules = [
+          inputs.stylix.homeManagerModules.stylix
+          ./user/abode.nix
+        ];
+      };
+
+
     };
 }
