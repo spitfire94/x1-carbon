@@ -9,10 +9,10 @@
     "ed" = "$EDITOR";
     "ve" = "$VISUAL";
     "pg" = "$PAGER";
-    "ls" = "exa -F";
-    "la" = "exa -Fa --long --git";
-    "ll" = "exa -F --long --git-ignore --sort=modified";
-    "lt" = "exa -Fa --long --git --git-ignore -I '.git*' --tree";
+    "ls" = "eza -F";
+    "la" = "eza -Fa --long --git";
+    "ll" = "eza -F --long --git-ignore --sort=modified";
+    "lt" = "eza -Fa --long --git --git-ignore -I '.git*' --tree";
     "cat" = "bat";
     "mkd" = "mkdir -p";
     "mkf" = "touch";

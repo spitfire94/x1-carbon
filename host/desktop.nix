@@ -42,7 +42,7 @@ in {
 
   fonts = {
     fontconfig.enable = true;
-    fonts = [font-pack];
+    packages = [font-pack];
   };
 
   sound.enable = true;
@@ -98,7 +98,7 @@ in {
       # gnome-characters
       gnome-music
       cheese # webcam tool
-      gedit # text editor
+      # gedit # text editor
       epiphany # web browser
       geary # email reader
       evince # document viewer

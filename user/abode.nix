@@ -10,7 +10,7 @@ in {
     ./stylix.nix
     ./nushell.nix
     ./xdg-dirs.nix
-    ./shAliases.nix
+    # ./shAliases.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -19,7 +19,7 @@ in {
   home.username = badge.handle;
   home.stateVersion = "22.11";
   home.homeDirectory = "/home";
-  home.extraOutputsToInstall = ["doc" "info"];
+  home.extraOutputsToInstall = ["doc" "info"]; # "man"
   home.packages = with pkgs; [
     # nu_scripts-unstable
     nix-your-shell
@@ -28,10 +28,8 @@ in {
     lolcat
     figlet
     fortune
-    starship
     pipes-rs
     buku
-    bukut
     bukubrow
     grc
     helix
@@ -209,17 +207,17 @@ in {
   };
 
   programs.fzf.enable = true;
-  programs.zoxide.enable = true;
+  # programs.zoxide.enable = true;
   programs.lf.enable = true;
   programs.rbw.enable = true;
   programs.home-manager.enable = true;
-  programs.man.generateCaches = true;
+  # programs.man.generateCaches = true;
   programs.nix-index.enable = true;
   programs.yt-dlp.enable = true;
   services.caffeine.enable = true;
   services.syncthing.enable = true;
-  services.syncthing.tray.enable = true;
-  programs.atuin.enable = true;
+  # services.syncthing.tray.enable = true;
+  # programs.atuin.enable = true;
   # services.shellhub-agent.enable = true;
 
   fonts.fontconfig.enable = true;

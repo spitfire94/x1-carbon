@@ -20,7 +20,7 @@
     pcsctools
     fido2luks
     libfido2
-    step-ca
+    # step-ca
     gpg-tui
     gnupg
     gpgme
@@ -32,7 +32,7 @@
 
   services.openssh = {
     enable = true;
-    settings.permitRootLogin = "no";
+    settings.PermitRootLogin = "no";
   };
 
   environment.shellInit = ''

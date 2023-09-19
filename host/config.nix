@@ -76,8 +76,8 @@
       rsync
       zip
       lsd
-      exa
       oil
+      eza
       fish
       elvish
       xonsh
@@ -127,6 +127,8 @@
       btop
       tiptop
       catcli
+      # devenv
+      kmod
     ];
 
   boot.initrd.availableKernelModules = ["xhci_pci" "nvme"];
@@ -154,7 +156,9 @@
   services.upower.enable = true;
   services.logind.lidSwitch = "hybrid-sleep";
   services.logind.lidSwitchExternalPower = "suspend"; #ignore
+  # services.openssh.settings.PermitRootLogin = lib.mkForce "prohibit-password";
 
+  # prevent usb auto mount
   services.udev.extraRules = ''
     DRIVERS=="usb-storage", SUBSYSTEMS=="usb", ENV{UDISKS_AUTO}="0", ENV{UDISKS_IGNORE}="1"
   '';
@@ -185,4 +189,6 @@
 
   # virtualisation.virtualbox.host.enable = true;
   # virtualisation.virtualbox.host.enableExtensionPack = true;
+
+  security.doas.enable = true;
 }

@@ -1,14 +1,21 @@
 {
   description = "Pet machine configuration of spitfire@stargem.xyz";
 
+  nixConfig = {
+    # extra-trusted-public-keys = "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
+    # extra-substituters = "https://nix-community.cachix.org";
+    allowUnfree = true;
+  };
+
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-mgr.url = "github:nix-community/home-manager";
     hardware.url = "github:NixOS/nixos-hardware";
     flake-parts.url = "github:hercules-ci/flake-parts";
     drv-parts.url = "github:DavHau/drv-parts";
     stylix.url = "github:danth/stylix";
-    oily.url = "github:StargemSystems/oily";
+    # oily.url = "github:StargemSystems/oily";
+    devenv.url = "github:cachix/devenv/latest";
     home-mgr.inputs.nixpkgs.follows = "nixpkgs";
     # polymc.url = "github:PolyMC/PolyMC";
   };
@@ -22,10 +29,10 @@
       ];
   
       perSystem = { config, pkgs, final, ... }: {
-        # allowUnfree = true;
         overlayAttrs = {
-          inherit (config.packages) vivaldi throttled;
+          inherit (config.packages) devenv vivaldi throttled;
         };
+        packages.devenv = config.inputs.devenv.packages.default;
         packages.vivaldi = pkgs.vivaldi.overrideAttrs (old: {
           enableWidevine = true;
           proprietaryCodecs = true;
@@ -56,7 +63,6 @@
           ./user/abode.nix
         ];
       };
-
 
     };
 }

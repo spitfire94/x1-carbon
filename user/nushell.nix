@@ -8,10 +8,11 @@ with lib;
 let
 
   asPosix = var: if hasInfix "$" var
-    then "(sh -c 'echo ${escapeShellArg var}')"
-    else escapeShellArg var;
+    then "(sh -c 'echo ${var}')" # escapeShellArg
+    else var;
+  
   environ = concatStringsSep "\n" (
-    mapAttrsFlatten (k: v: "let-env ${k} = ${asPosix v}")
+    mapAttrsFlatten (k: v: "$env.${k} = \"${asPosix v}\"")
       (filterAttrs (k: v: v != null) config.home.sessionVariables)
   );
 
@@ -22,17 +23,17 @@ let
   '';
 
   starshipInit = ''
-    let-env STARSHIP_SHELL = "nu"
-    let-env STARSHIP_SESSION_KEY = (random chars -l 16)
-    let-env PROMPT_MULTILINE_INDICATOR = (^starship prompt --continuation)
-    let-env PROMPT_INDICATOR = ""
+    $env.STARSHIP_SHELL = "nu"
+    $env.STARSHIP_SESSION_KEY = (random chars -l 16)
+    $env.PROMPT_MULTILINE_INDICATOR = (^starship prompt --continuation)
+    $env.PROMPT_INDICATOR = ""
 
-    let-env PROMPT_COMMAND = {||
+    $env.PROMPT_COMMAND = {||
       let width = (term size).columns
       ^starship prompt $"--cmd-duration=($env.CMD_DURATION_MS)" $"--status=($env.LAST_EXIT_CODE)" $"--terminal-width=($width)"
     }
 
-    let-env PROMPT_COMMAND_RIGHT = {||
+    $env.PROMPT_COMMAND_RIGHT = {||
       let width = (term size).columns
       ^starship prompt --right $"--cmd-duration=($env.CMD_DURATION_MS)" $"--status=($env.LAST_EXIT_CODE)" $"--terminal-width=($width)"
     }
@@ -53,17 +54,18 @@ in {
   programs.nushell = {
     enable = true;
 
+    # ${starshipInit}
     extraEnv = ''
       ${environ}
 
       source ${ohmyposhInit}
 
-      let-env GPG_TTY = (tty)
-      let-env SSH_AUTH_SOCK = (gpgconf --list-dirs agent-ssh-socket)
+      $env.GPG_TTY = (tty)
+      $env.SSH_AUTH_SOCK = (gpgconf --list-dirs agent-ssh-socket)
     '';
 
     extraConfig = ''
-      let-env config = {
+      $env.config = {
         show_banner: false
         render_right_prompt_on_last_line: true
         history: {
@@ -72,7 +74,7 @@ in {
           file_format: "sqlite"
         }
         completions: {
-          algorithm: "fuzzy"
+          # algorithm: "fuzzy"
           external: {
             enable: true
             completer: {|spans| carapace $spans.0 nushell $spans | from json }
@@ -101,7 +103,7 @@ in {
 
       alias ll = ls -l
       alias la = ls -a
-      alias lt = exa -Fa --long --git --git-ignore -I '.git*' --tree
+      alias lt = eza -Fa --long --git --git-ignore -I '.git*' --tree
 
       # Rebuild and enable nixos configuration
       alias nixos-rb = doas nixos-rebuild boot --flake $env.NIXOS_CONFIG

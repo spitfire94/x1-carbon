@@ -5,7 +5,7 @@
   ...
 }: {
   stylix = {
-    image = ./wallpaper/nasa-x7dstt.jpg;
+    image = ./wallpaper/VaporwaveArt-q1z33yce5uwa1.png;
     polarity = "dark";
   };
 }
