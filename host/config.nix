@@ -48,7 +48,7 @@
     settings = {
       auto-optimise-store = true;
       system-features = ["big-parallel" "kvm" "recursive-nix"];
-      experimental-features = ["nix-command" "flakes"];
+      experimental-features = [ "auto-allocate-uids" "configurable-impure-env" "nix-command" "flakes" "recursive-nix" "ca-derivations" "dynamic-derivations"];
       substituters = [
         "https://nix-community.cachix.org"
         "https://cache.nixos.org/"
@@ -61,6 +61,7 @@
 
   environment.systemPackages =
     with pkgs; [
+      rnix-lsp
       gnome.dconf-editor
       dracula-theme
       killall
@@ -74,6 +75,7 @@
       wget
       axel
       rsync
+      rclone
       zip
       lsd
       oil
@@ -111,6 +113,7 @@
       nix-index
       nix-du
       nix-info
+      nix-search-cli
       nix-output-monitor
       alejandra
       manix
@@ -164,8 +167,8 @@
   '';
 
   services.xserver = {
-    layout = "us";
-    xkbVariant = "dvorak";
+    xkb.layout = "us";
+    xkb.variant = "dvorak";
     libinput.enable = true;
   };
 

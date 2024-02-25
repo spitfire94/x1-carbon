@@ -18,7 +18,7 @@ in {
     sudo.enable = false;
     doas.enable = true;
     doas.wheelNeedsPassword = false;
-    pam.enableSSHAgentAuth = true;
+    pam.sshAgentAuth.enable = true;
   };
 
   users = {

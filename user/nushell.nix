@@ -7,20 +7,13 @@
 with lib;
 let
 
-  asPosix = var: if hasInfix "$" var
-    then "(sh -c 'echo ${var}')" # escapeShellArg
-    else var;
-  
-  environ = concatStringsSep "\n" (
-    mapAttrsFlatten (k: v: "$env.${k} = \"${asPosix v}\"")
-      (filterAttrs (k: v: v != null) config.home.sessionVariables)
-  );
+  environ = pkgs.writeText "env.json" "${builtins.toJSON config.home.sessionVariables}";
 
-  ohmyposhInit = pkgs.runCommand "oh-my-posh.nu" {} ''
-    ${pkgs.oh-my-posh}/bin/oh-my-posh init --print nu \
-      --config ${pkgs.oh-my-posh}/share/oh-my-posh/themes/${config.programs.oh-my-posh.useTheme}.omp.json \
-      > $out
-  '';
+  # ohmyposhInit = pkgs.runCommand "oh-my-posh.nu" {} ''
+  #   ${pkgs.oh-my-posh}/bin/oh-my-posh init --print nu \
+  #     --config ${pkgs.oh-my-posh}/share/oh-my-posh/themes/${config.programs.oh-my-posh.useTheme}.omp.json \
+  #     > $out
+  # '';
 
   starshipInit = ''
     $env.STARSHIP_SHELL = "nu"
@@ -41,24 +34,25 @@ let
 
 in {
 
-  home.packages = with pkgs; [ carapace oh-my-posh starship ];
+  home.packages = with pkgs; [ nu_scripts carapace starship ]; # oh-my-posh
 
   home.file."${config.xdg.configHome}/starship.toml".source =
     pkgs.runCommand "starship.toml" {} "${pkgs.starship}/bin/starship preset pure-preset > $out";
   
   programs.oh-my-posh = {
-    enable = true;
+    enable = false;
     useTheme = "cobalt2";
   };
 
   programs.nushell = {
     enable = true;
+    package = pkgs.nushellFull;
 
-    # ${starshipInit}
     extraEnv = ''
-      ${environ}
+      open ${environ} | load-env
 
-      source ${ohmyposhInit}
+      # $\{starshipInit}
+      # source $\{ohmyposhInit}
 
       $env.GPG_TTY = (tty)
       $env.SSH_AUTH_SOCK = (gpgconf --list-dirs agent-ssh-socket)
@@ -74,11 +68,11 @@ in {
           file_format: "sqlite"
         }
         completions: {
-          # algorithm: "fuzzy"
-          external: {
-            enable: true
-            completer: {|spans| carapace $spans.0 nushell $spans | from json }
-          }
+          algorithm: "fuzzy"
+          # external: {
+          #   enable: true
+          #   completer: {|spans| carapace $spans.0 nushell $spans | from json }
+          # }
         }
         hooks: {
           pre_prompt: [{
@@ -92,24 +86,33 @@ in {
       }
 
       if not (which bat | is-empty) {
-        alias cat = bat 
+        alias cat = ^bat 
       }
 
       if (which doas | is-empty) {
-        alias doas = sudo
+        alias doas = ^sudo
       } else {
-        alias sudo = doas 
+        alias sudo = ^doas 
       }
 
+      alias ed = micro
+      alias rl = direnv reload
+      alias vc = git # ver ctl
       alias ll = ls -l
       alias la = ls -a
-      alias lt = eza -Fa --long --git --git-ignore -I '.git*' --tree
+      alias lt = ^eza -M -F -a --long --header --group-directories-first --sort=type --total-size --git-repos --git --git-ignore -I '.git*' --tree --level=6
+
+      # Dvorak typist practice
+      alias dvtyp = gtypist --personal-best --scoring=cpm --max-error=2.0 --show-errors d.typ
+
+      # Update flake inputs of nixos configuration
+      alias nixos-up = nix flake update --flake $env.NIXOS_CONFIG
 
       # Rebuild and enable nixos configuration
-      alias nixos-rb = doas nixos-rebuild boot --flake $env.NIXOS_CONFIG
+      alias nixos-rb = doas nixos-rebuild boot --impure --flake $env.NIXOS_CONFIG
 
       # Rebuild and activate nixos configuration
-      alias nixos-sw = doas nixos-rebuild switch --flake $env.NIXOS_CONFIG
+      alias nixos-sw = doas nixos-rebuild switch --impure --flake $env.NIXOS_CONFIG
 
       # Mount a filesystem without needing an existing directory
       alias mnt = doas mount --mkdir
@@ -121,21 +124,20 @@ in {
       alias mkd = mkdir
       
       # Create directory and touch file
-      def mkf [trg] {
-        $trg | path dirname | mkdir $in
-        touch $trg
-      }
+      def mkf [...trgs] {
+        $trgs | each {|trg| $trg | path dirname | mkd $in; touch $trg }
+        ignore
+        }
 
-      # Create a symbolic link
-      alias mkln = ln -s
-
-      # Create a relative symbolic link
-      alias mklr = ln -sr
+      # simpler linking
+      alias ln-h = ln     # hard link 
+      alias ln-s = ln -s  # soft link
+      alias ln-r = ln -sr # rela link
 
       # remove a symbolic link
       alias rmln = unlink
 
-      # force remove anything
+      # force remove anything and everything
       alias rmrf = rm -rf
 
       # Reload the environment shell
@@ -173,7 +175,7 @@ in {
       }
 
       # Run luks v2 cryptsetup sub-commands
-      def luks [task: string ...args] {
+      def --wrapped luks [task: string ...args] {
         doas cryptsetup --batch-mode --type=luks2 $"luks($task | str capitalize)" $args
       }
 

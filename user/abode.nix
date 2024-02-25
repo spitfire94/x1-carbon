@@ -55,6 +55,13 @@ in {
     wemux
     base16-shell-preview
     with-shell
+    google-cloud-sdk
+    graphviz
+    zgrviewer
+    xdot
+    dot2tex
+    aria2
+    axel
   ];
 
   home.sessionVariables = {
@@ -113,9 +120,9 @@ in {
       br = "branch";
       sr = "!git --no-pager subrepo";
       st = "status --branch --short";
-      am = "commit --amend --no-edit";
+      ca = "commit --amend --no-edit";
       cm = "commit --all --message";
-      cq = "commit --all --allow-empty-message --no-edit";
+      cq = "commit --all --allow-empty-message --no-edit"; # q for quick
       gr = "!git --no-pager log --graph --oneline --decorate --all";
       unstage = "reset HEAD --";
       revert = "log -1 HEAD";
@@ -169,7 +176,7 @@ in {
       User git
       ControlMaster no
       IdentitiesOnly yes
-      IdentityFile ~/.ssh/id_rsa_yubikey.pub
+      IdentityFile ${./sshkey.pub}
       MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
   '';
 

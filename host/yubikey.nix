@@ -18,7 +18,7 @@
     signing-party
     yubico-pam
     pcsctools
-    fido2luks
+    # fido2luks
     libfido2
     # step-ca
     gpg-tui
@@ -47,11 +47,11 @@
     mode = "challenge-response";
   };
 
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   pinentryFlavor = "curses";
-  #   enableSSHSupport = true;
-  #   enableExtraSocket = true;
-  #   enableBrowserSocket = true;
-  # };
+  programs.gnupg.agent = {
+    enable = true;
+    pinentryFlavor = "curses";
+    enableSSHSupport = true;
+    enableExtraSocket = true;
+    enableBrowserSocket = true;
+  };
 }

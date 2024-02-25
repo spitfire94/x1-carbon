@@ -75,23 +75,24 @@ in {
       default = null;
     };
     chassis = mkOption {
-      default = null;
+      default = "generic";
       description = "machine form factor";
       type = with types;
         enum [
           null
+          "generic"
+          "virtual"
           "desktop"
           "laptop"
-          "convertible"
           "server"
           "tablet"
           "jumper"
           "handset"
-          "watch"
           "embedded"
-          "vm"
-          "container"
           "portable"
+          "container"
+          "convertible"
+          "wrist-watch"
         ];
     };
   };

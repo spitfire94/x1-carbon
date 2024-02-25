@@ -22,7 +22,7 @@ in {
   };
 
   stylix = { 
-    image = ../user/wallpaper/nasa-x7dstt.jpg;
+    image = ../user/wallpaper/wp-01.png;
     polarity = "dark";
   };
 
@@ -71,21 +71,34 @@ in {
       vitals
       espresso
       gsconnect
-      taildrop-send
+      # taildrop-send
       workspace-matrix
       tailscale-status
-      hotkeys-popup
-      clear-top-bar
-      zfs-status-monitor
-      lock-screen-message
-      gesture-improvements
-      tweaks-in-system-menu
-      system-action-hibernate
-      order-gnome-shell-extensions
+      # hotkeys-popup
+      # clear-top-bar
+      # zfs-status-monitor
+      # lock-screen-message
+      # gesture-improvements
+      # tweaks-in-system-menu
+      # system-action-hibernate
+      # order-gnome-shell-extensions
       unlock-dialog-background
       fullscreen-notifications
       dash2dock-lite
       all-ip-addresses
+      hide-top-bar
+      thinkpad-thermal
+      thinkpad-battery-threshold
+      systemd-status
+      systemd-manager
+      super-key
+      # strongdm
+      space-bar
+      smartcard-lock
+      quick-settings-tweaker
+      peek-top-bar-on-fullscreen
+      openweather
+      blur-my-shell
     ] ++ [pkgs.gnome.gnome-characters];
 
   environment.gnome.excludePackages =

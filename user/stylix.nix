@@ -5,7 +5,8 @@
   ...
 }: {
   stylix = {
-    image = ./wallpaper/VaporwaveArt-q1z33yce5uwa1.png;
+    image = ./wallpaper/wp-01.png;
     polarity = "dark";
+	targets.vscode.enable = false;
   };
 }
