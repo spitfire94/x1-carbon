@@ -28,8 +28,8 @@
     "sudo" = "doas";
     "redoas" = "doas !!";
     "dt-stmp" = "date --utc +%Y%m%d%H%M%S";
-    "nixos-rb" = "doas nixos-rebuild boot --flake $NIXOS_CONFIG#";
-    "nixos-sw" = "doas nixos-rebuild switch --flake $NIXOS_CONFIG#";
+    "nixos-rb" = "doas nixos-rebuild --impure boot --flake $NIXOS_CONFIG#";
+    "nixos-sw" = "doas nixos-rebuild --impure switch --flake $NIXOS_CONFIG#";
     "wake-lock" = "systemd-inhibit --why='Allow long running command to finish' --what=idle:sleep:handle-lid-switch --";
     "sync-copy" = "wake-lock rsync -ah --partial --no-inc-recursive --info=progress2";
     "nixos-build" = "nom build $NIXOS_CONFIG#nixosConfigurations.$HOSTNAME.config.system.build.toplevel && doas nixos-rebuild boot --flake $NIXOS_CONFIG#";

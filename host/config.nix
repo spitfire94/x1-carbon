@@ -30,6 +30,7 @@
   nixpkgs.config = {
     allowBroken = true;
     allowUnfree = true;
+    permittedInsecurePackages = [ "nix-2.16.2" ];
   };
 
   time.timeZone = "America/New_York";
@@ -61,7 +62,6 @@
 
   environment.systemPackages =
     with pkgs; [
-      rnix-lsp
       gnome.dconf-editor
       dracula-theme
       killall
@@ -110,9 +110,10 @@
       tree
       sshfs
       most
-      nix-index
+      nixd
       nix-du
       nix-info
+      nix-index
       nix-search-cli
       nix-output-monitor
       alejandra
@@ -128,10 +129,12 @@
       rename
       cod
       btop
+      broot
       tiptop
       catcli
       # devenv
       kmod
+      lynx
     ];
 
   boot.initrd.availableKernelModules = ["xhci_pci" "nvme"];

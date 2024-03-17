@@ -19,7 +19,7 @@ in {
   home.username = badge.handle;
   home.stateVersion = "22.11";
   home.homeDirectory = "/home";
-  home.extraOutputsToInstall = ["doc" "info"]; # "man"
+  home.extraOutputsToInstall = ["man" "doc" "info"];
   home.packages = with pkgs; [
     # nu_scripts-unstable
     nix-your-shell
@@ -188,10 +188,10 @@ in {
     enable = true;
     maxCacheTtl = 120;
     defaultCacheTtl = 60;
-    pinentryFlavor = "curses";
+    pinentryPackage = pkgs.pinentry-curses;
     sshKeys = [badge.keyid];
     enableScDaemon = true;
-    enableSshSupport = true;
+    # enableSshSupport = true;
     enableExtraSocket = true;
     extraConfig = ''
       ttyname $GPG_TTY

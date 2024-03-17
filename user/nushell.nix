@@ -34,13 +34,13 @@ let
 
 in {
 
-  home.packages = with pkgs; [ nu_scripts carapace starship ]; # oh-my-posh
+  home.packages = with pkgs; [ nu_scripts carapace starship oh-my-posh ];
 
   home.file."${config.xdg.configHome}/starship.toml".source =
     pkgs.runCommand "starship.toml" {} "${pkgs.starship}/bin/starship preset pure-preset > $out";
   
   programs.oh-my-posh = {
-    enable = false;
+    enable = true;
     useTheme = "cobalt2";
   };
 
@@ -95,6 +95,8 @@ in {
         alias sudo = ^doas 
       }
 
+      alias vw = bat
+      alias pg = most
       alias ed = micro
       alias rl = direnv reload
       alias vc = git # ver ctl
@@ -106,13 +108,13 @@ in {
       alias dvtyp = gtypist --personal-best --scoring=cpm --max-error=2.0 --show-errors d.typ
 
       # Update flake inputs of nixos configuration
-      alias nixos-up = nix flake update --flake $env.NIXOS_CONFIG
+      alias nixos-up = doas nix flake update --flake /etc/nixos
 
       # Rebuild and enable nixos configuration
-      alias nixos-rb = doas nixos-rebuild boot --impure --flake $env.NIXOS_CONFIG
+      alias nixos-rb = doas nixos-rebuild boot --impure --flake /etc/nixos
 
       # Rebuild and activate nixos configuration
-      alias nixos-sw = doas nixos-rebuild switch --impure --flake $env.NIXOS_CONFIG
+      alias nixos-sw = doas nixos-rebuild switch --impure --flake /etc/nixos
 
       # Mount a filesystem without needing an existing directory
       alias mnt = doas mount --mkdir

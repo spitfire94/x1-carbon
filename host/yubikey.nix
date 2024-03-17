@@ -20,7 +20,8 @@
     pcsctools
     # fido2luks
     libfido2
-    # step-ca
+    step-ca
+    openssl
     gpg-tui
     gnupg
     gpgme
@@ -49,7 +50,7 @@
 
   programs.gnupg.agent = {
     enable = true;
-    pinentryFlavor = "curses";
+    pinentryPackage = pkgs.pinentry-curses;
     enableSSHSupport = true;
     enableExtraSocket = true;
     enableBrowserSocket = true;

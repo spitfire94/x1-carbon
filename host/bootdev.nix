@@ -98,9 +98,14 @@ in {
   };
 
   config = {
+    # boot.initrd.luks.yubikeySupport = true;
+    # boot.initrd.luks.fido2Support = true;
     boot.initrd.luks.devices."bank-${cfg.id}" = {
       fallbackToPassword = mkDefault true;
       allowDiscards = cfg.enableTrim;
+      fido2.gracePeriod = 90;
+      fido2.passwordLess = true;
+      fido2.credential = "auto";
       device = devTarg "bank";
       preLVM = true;
     };
@@ -184,7 +189,6 @@ in {
       '';
     };
 
-    boot.initrd.luks.yubikeySupport = true;
     boot.loader.efi.canTouchEfiVariables = false;
     boot.supportedFilesystems = ["zfs" "exfat" "btrfs" "f2fs" "xfs" "ntfs"];
     hardware.cpu.intel.updateMicrocode = mkDefault config.hardware.enableRedistributableFirmware;
