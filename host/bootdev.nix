@@ -190,7 +190,7 @@ in {
     };
 
     boot.loader.efi.canTouchEfiVariables = false;
-    boot.supportedFilesystems = ["zfs" "exfat" "btrfs" "f2fs" "xfs" "ntfs"];
+    boot.supportedFilesystems = ["zfs" "exfat" "btrfs" "f2fs" "xfs" "ntfs" "bcachefs"];
     hardware.cpu.intel.updateMicrocode = mkDefault config.hardware.enableRedistributableFirmware;
     networking.hostId = builtins.readFile machine-id;
     networking.hostName = cfg.handle;

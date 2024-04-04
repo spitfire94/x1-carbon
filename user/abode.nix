@@ -7,11 +7,16 @@
   badge = import ./badge.nix;
 in {
   imports = [
-    ./stylix.nix
     ./nushell.nix
     ./xdg-dirs.nix
     # ./shAliases.nix
   ];
+
+  stylix = {
+    polarity = "dark";
+    image = ./wallpaper/wp-02.png;
+	  targets.vscode.enable = false;
+  };
 
   nixpkgs.config.allowUnfree = true;
   xsession.enable = true;
@@ -69,7 +74,7 @@ in {
     EDITOR = "micro";
     VISUAL = "vscode";
     NIX_PAGER = "less";
-    GNUPGHOME = "${config.xdg.stateHome}/gnupg";
+    # GNUPGHOME = "${config.xdg.stateHome}/gnupg";
     NIXOS_CONFIG = "${config.home.homeDirectory}/project/thinkpad";
   };
 
@@ -191,7 +196,7 @@ in {
     pinentryPackage = pkgs.pinentry-curses;
     sshKeys = [badge.keyid];
     enableScDaemon = true;
-    # enableSshSupport = true;
+    enableSshSupport = true;
     enableExtraSocket = true;
     extraConfig = ''
       ttyname $GPG_TTY
@@ -208,13 +213,16 @@ in {
     terminal = "xterm-256color";
     plugins = with pkgs.tmuxPlugins; [
       sensible
-      dracula
+      # dracula
       better-mouse-mode
     ];
   };
 
+  programs.carapace.enable = true;
+  programs.carapace.enableNushellIntegration = true;
+
   programs.fzf.enable = true;
-  # programs.zoxide.enable = true;
+  programs.zoxide.enable = true;
   programs.lf.enable = true;
   programs.rbw.enable = true;
   programs.home-manager.enable = true;

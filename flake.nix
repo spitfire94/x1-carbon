@@ -12,11 +12,10 @@
     home-mgr.url = "github:nix-community/home-manager";
     hardware.url = "github:NixOS/nixos-hardware";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    drv-parts.url = "github:DavHau/drv-parts";
     stylix.url = "github:danth/stylix";
-    # oily.url = "github:StargemSystems/oily";
     devenv.url = "github:cachix/devenv/latest";
     home-mgr.inputs.nixpkgs.follows = "nixpkgs";
+    # drv-parts.url = "github:DavHau/drv-parts";
     # polymc.url = "github:PolyMC/PolyMC";
   };
 
@@ -24,7 +23,7 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = ["x86_64-linux"];
       imports = [
-        inputs.drv-parts.modules.flake-parts.drv-parts
+        # inputs.drv-parts.modules.flake-parts.drv-parts
         inputs.flake-parts.flakeModules.easyOverlay
       ];
   

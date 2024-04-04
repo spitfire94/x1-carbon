@@ -1,11 +1,11 @@
 {
-  lib,
   pkgs,
-  config,
   inputs,
   modulesPath,
   ...
-}: {
+}:
+let badge = import ../user/badge.nix;
+in {
   system.stateVersion = "22.11";
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -39,22 +39,32 @@
 
   nix = {
     package = pkgs.nixUnstable;
-    # registry = {
-    #   nixpkgs.flake = inputs.nixpkgs;
-    #   home-manager.flake = inputs.home-mgr;
-    #   flake-parts.flake = inputs.flake-parts;
-    #   drv-parts.flake = inputs.drv-parts;
-    #   oily.flake = inputs.oily;
-    # };
+    registry = {
+      nixpkgs.flake = inputs.nixpkgs;
+      home-manager.flake = inputs.home-mgr;
+      flake-parts.flake = inputs.flake-parts;
+    };
     settings = {
+      warn-dirty = false;
+      use-cgroups = true;
       auto-optimise-store = true;
-      system-features = ["big-parallel" "kvm" "recursive-nix"];
-      experimental-features = [ "auto-allocate-uids" "configurable-impure-env" "nix-command" "flakes" "recursive-nix" "ca-derivations" "dynamic-derivations"];
+      accept-flake-config = true;
+      always-allow-substitutes = true;
+      use-xdg-base-directories = true;
+      system-features = ["big-parallel" "benchmark" "kvm" "recursive-nix"];
+      trusted-users = ["root" badge.handle];
+      experimental-features = [
+        "recursive-nix" "ca-derivations"
+        "nix-command" "flakes" "repl-flake"
+        "configurable-impure-env" "cgroups"
+        "dynamic-derivations" "auto-allocate-uids"
+        ];
       substituters = [
+        "https://cache.nixos.org"
         "https://nix-community.cachix.org"
-        "https://cache.nixos.org/"
       ];
       trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
     };
@@ -62,8 +72,9 @@
 
   environment.systemPackages =
     with pkgs; [
+      nixUnstable
       gnome.dconf-editor
-      dracula-theme
+      # dracula-theme
       killall
       nushell
       expect
@@ -111,6 +122,7 @@
       sshfs
       most
       nixd
+      nil
       nix-du
       nix-info
       nix-index

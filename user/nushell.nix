@@ -9,28 +9,9 @@ let
 
   environ = pkgs.writeText "env.json" "${builtins.toJSON config.home.sessionVariables}";
 
-  # ohmyposhInit = pkgs.runCommand "oh-my-posh.nu" {} ''
-  #   ${pkgs.oh-my-posh}/bin/oh-my-posh init --print nu \
-  #     --config ${pkgs.oh-my-posh}/share/oh-my-posh/themes/${config.programs.oh-my-posh.useTheme}.omp.json \
-  #     > $out
+  # carapaceInit = pkgs.runCommand "carapace-init.nu" {} ''
+    # ${pkgs.carapace}/bin/carapace _carapace nushell > $out
   # '';
-
-  starshipInit = ''
-    $env.STARSHIP_SHELL = "nu"
-    $env.STARSHIP_SESSION_KEY = (random chars -l 16)
-    $env.PROMPT_MULTILINE_INDICATOR = (^starship prompt --continuation)
-    $env.PROMPT_INDICATOR = ""
-
-    $env.PROMPT_COMMAND = {||
-      let width = (term size).columns
-      ^starship prompt $"--cmd-duration=($env.CMD_DURATION_MS)" $"--status=($env.LAST_EXIT_CODE)" $"--terminal-width=($width)"
-    }
-
-    $env.PROMPT_COMMAND_RIGHT = {||
-      let width = (term size).columns
-      ^starship prompt --right $"--cmd-duration=($env.CMD_DURATION_MS)" $"--status=($env.LAST_EXIT_CODE)" $"--terminal-width=($width)"
-    }
-  '';
 
 in {
 
@@ -67,13 +48,13 @@ in {
           sync_on_enter: true
           file_format: "sqlite"
         }
-        completions: {
-          algorithm: "fuzzy"
+        # completions: {
+          # algorithm: "fuzzy"
           # external: {
           #   enable: true
           #   completer: {|spans| carapace $spans.0 nushell $spans | from json }
           # }
-        }
+        # }
         hooks: {
           pre_prompt: [{
             code: "
@@ -84,6 +65,8 @@ in {
           }]
         }
       }
+
+      # source $\{carapaceInit}
 
       if not (which bat | is-empty) {
         alias cat = ^bat 
@@ -108,7 +91,7 @@ in {
       alias dvtyp = gtypist --personal-best --scoring=cpm --max-error=2.0 --show-errors d.typ
 
       # Update flake inputs of nixos configuration
-      alias nixos-up = doas nix flake update --flake /etc/nixos
+      alias nixos-up = nix flake update --impure --flake $env.NIXOS_CONFIG # --commit-lock-file
 
       # Rebuild and enable nixos configuration
       alias nixos-rb = doas nixos-rebuild boot --impure --flake /etc/nixos
@@ -173,7 +156,7 @@ in {
       
       # Turn an oil style regular expression into standard form
       def eggex [...expr] {
-        oil -c $"write $[/ ($expr | str join) /]"
+        ysh -c $"write $[/ ($expr | str join) /]"
       }
 
       # Run luks v2 cryptsetup sub-commands

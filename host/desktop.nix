@@ -15,15 +15,15 @@
   };
 in {
 
+  stylix = {
+    polarity = "dark";
+    image = ../user/wallpaper/wp-02.png;
+  };
+
   services.xserver = {
     enable = true;
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
-  };
-
-  stylix = { 
-    image = ../user/wallpaper/wp-01.png;
-    polarity = "dark";
   };
 
   hardware = {
