@@ -29,6 +29,7 @@ in{
       "uucp"
       "input"
       "vboxusers"
+      "plugdev"
     ];
   };
 }

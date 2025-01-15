@@ -5,6 +5,7 @@
   ...
 }: {
   programs.adb.enable = true;
+  programs.droidcam.enable = true;
   nixpkgs.config.android_sdk.accept_license = true;
   users.users.admin.extraGroups = ["adbusers"];
   environment.systemPackages = with pkgs; [
@@ -14,15 +15,15 @@
     # android-backup-extractor
     # payload-dumper-go
     # imgpatchtools
-    # f2fs-tools
-    # e2fsprogs
+    f2fs-tools
+    e2fsprogs
     # abootimg
     # sdat2img
     # simg2img
     # tar2ext4
-    # waydroid
-    # scrcpy
-    # parted
+    waydroid
+    scrcpy
+    parted
     mtpfs
   ];
 }

@@ -30,7 +30,7 @@ in {
         XDG_MISC_DIR = "${myhome}/media/other";
         XDG_PROJ_DIR = "${myhome}/project";
         XDG_WORK_DIR = "${myhome}/clients";
-        XDG_ARCH_DIR = "${myhome}/archive";
+        XDG_ARCHIVE_DIR = "${myhome}/archive";
         XDG_BACKUP_DIR = "${myhome}/backups";
         XDG_BIN_DIR = "${myhome}/.local/bin";
       };

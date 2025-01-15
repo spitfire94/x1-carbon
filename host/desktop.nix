@@ -4,20 +4,24 @@
   config,
   ...
 }: let 
-  font-pack = pkgs.nerdfonts.override {
-    fonts = [
-      "FiraCode"
-      "FiraMono"
-      "Hack"
-      "Ubuntu"
-      "UbuntuMono"
-    ];
-  };
+#  font-pack = pkgs.nerdfonts.override {
+#    fonts = [
+#      "FiraCode"
+#      "FiraMono"
+#      "Hack"
+#      "Ubuntu"
+#      "UbuntuMono"
+#      #"OperatorMono"
+#      #"CatographMono"
+#    ];
+#  };
+  fontPack = builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
 in {
 
   stylix = {
+    enable = true;
     polarity = "dark";
-    image = ../user/wallpaper/wp-02.png;
+    image = ../user/wallpaper/wp-03.jpg;
   };
 
   services.xserver = {
@@ -27,28 +31,28 @@ in {
   };
 
   hardware = {
-    pulseaudio.enable = true;
-    pulseaudio.package = pkgs.pulseaudioFull;
-    opengl = {
+    #pulseaudio.enable = true;
+    #pulseaudio.package = pkgs.pulseaudioFull;
+    graphics = {
       enable = true;
-      extraPackages = with pkgs; [
-        intel-media-driver
-        vaapiIntel
-        vaapiVdpau
-        libvdpau-va-gl
-      ];
+ #     extraPackages = with pkgs; [
+ #       intel-media-driver
+        #vaapiIntel
+        #vaapiVdpau
+#        libvdpau-va-gl
+#      ];
     };
   };
 
   fonts = {
     fontconfig.enable = true;
-    packages = [font-pack];
+    packages = fontPack;
   };
 
-  sound.enable = true;
   programs.dconf.enable = true;
   services.dbus.packages = [pkgs.gcr];
   services.gnome.gnome-settings-daemon.enable = true;
+  services.autorandr.enable = true;
 
   programs.sway = {
     enable = true;
@@ -60,20 +64,16 @@ in {
     package = pkgs.gnomeExtensions.gsconnect;
   };
 
-  services.udev.packages = with pkgs; [
-    gnome.gnome-settings-daemon
-  ];
-
   environment.systemPackages = 
-    with pkgs.gnomeExtensions; [
+    (with pkgs.gnomeExtensions; [
       appindicator
       just-perfection
       vitals
       espresso
       gsconnect
-      # taildrop-send
       workspace-matrix
       tailscale-status
+      solaar-extension
       # hotkeys-popup
       # clear-top-bar
       # zfs-status-monitor
@@ -81,11 +81,11 @@ in {
       # gesture-improvements
       # tweaks-in-system-menu
       # system-action-hibernate
-      # order-gnome-shell-extensions
+      order-gnome-shell-extensions
       unlock-dialog-background
       fullscreen-notifications
       dash2dock-lite
-      all-ip-addresses
+      # all-ip-addresses
       hide-top-bar
       thinkpad-thermal
       thinkpad-battery-threshold
@@ -94,32 +94,31 @@ in {
       super-key
       # strongdm
       space-bar
-      smartcard-lock
+      # smartcard-lock
       quick-settings-tweaker
       peek-top-bar-on-fullscreen
-      openweather
+      # openweather
       blur-my-shell
-    ] ++ [pkgs.gnome.gnome-characters];
+    ]) ++ (with pkgs; [cheese gnome-characters]);
 
   environment.gnome.excludePackages =
     (with pkgs; [
-      gnome-photos
-      gnome-tour
-    ])
-    ++ (with pkgs.gnome; [
-      gnome-terminal
-      # gnome-characters
-      gnome-music
-      cheese # webcam tool
-      # gedit # text editor
+      # gnome-photos
+      # gnome-tour
       epiphany # web browser
       geary # email reader
       evince # document viewer
       totem # video player
-      tali # poker game
-      iagno # go game
-      hitori # sudoku game
-      atomix # puzzle game
+      # gnome-terminal
+    ])
+    ++ (with pkgs.gnome; [
+      # gnome-characters
+      # cheese # webcam tool
+      # gedit # text editor
+      # tali # poker game
+      # iagno # go game
+      # hitori # sudoku game
+      # atomix # puzzle game
     ]);
 
 }

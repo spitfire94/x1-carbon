@@ -5,6 +5,7 @@
     # extra-trusted-public-keys = "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
     # extra-substituters = "https://nix-community.cachix.org";
     allowUnfree = true;
+    allow-import-from-derivation = true;
   };
 
   inputs = {
@@ -14,7 +15,7 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     stylix.url = "github:danth/stylix";
     devenv.url = "github:cachix/devenv/latest";
-    home-mgr.inputs.nixpkgs.follows = "nixpkgs";
+    #home-mgr.inputs.nixpkgs.follows = "nixpkgs";
     # drv-parts.url = "github:DavHau/drv-parts";
     # polymc.url = "github:PolyMC/PolyMC";
   };

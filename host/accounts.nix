@@ -10,7 +10,7 @@
   };
 in {
   home-manager = {
-    useGlobalPkgs = true;
+    # useGlobalPkgs = true;
     useUserPackages = true;
   };
 
@@ -23,7 +23,7 @@ in {
 
   users = {
     mutableUsers = false;
-    defaultUserShell = pkgs.oil;
+    defaultUserShell = pkgs.oils-for-unix;
     users.root.home = lib.mkForce "/admin/root";
     groups.admin.gid = 999;
     users.admin = {

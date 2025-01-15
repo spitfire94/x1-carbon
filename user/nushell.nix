@@ -9,9 +9,9 @@ let
 
   environ = pkgs.writeText "env.json" "${builtins.toJSON config.home.sessionVariables}";
 
-  # carapaceInit = pkgs.runCommand "carapace-init.nu" {} ''
-    # ${pkgs.carapace}/bin/carapace _carapace nushell > $out
-  # '';
+  carapaceInit = pkgs.runCommand "carapace-init.nu" {} ''
+    ${pkgs.carapace}/bin/carapace _carapace nushell > $out
+  '';
 
 in {
 
@@ -27,7 +27,6 @@ in {
 
   programs.nushell = {
     enable = true;
-    package = pkgs.nushellFull;
 
     extraEnv = ''
       open ${environ} | load-env
@@ -66,11 +65,15 @@ in {
         }
       }
 
-      # source $\{carapaceInit}
+      source ${carapaceInit}
+
+      # $env.NU_LIB_DIRS ++= '/home/project/hackit/src/nutils'
 
       if not (which bat | is-empty) {
         alias cat = ^bat 
       }
+
+      # alias sudo = ^doas 
 
       if (which doas | is-empty) {
         alias doas = ^sudo
@@ -78,6 +81,7 @@ in {
         alias sudo = ^doas 
       }
 
+      alias j = ^just
       alias vw = bat
       alias pg = most
       alias ed = micro
@@ -91,13 +95,15 @@ in {
       alias dvtyp = gtypist --personal-best --scoring=cpm --max-error=2.0 --show-errors d.typ
 
       # Update flake inputs of nixos configuration
-      alias nixos-up = nix flake update --impure --flake $env.NIXOS_CONFIG # --commit-lock-file
+      def nixos-up [] { nix flake update --impure --flake $env.NIXOS_CONFIG; glob $'($env.NIXOS_CONFIG)/flake.*' | doas cp -f ...$in -t /etc/nixos }
+
+      alias nixos-mk = nom build --no-link --impure $'($env.NIXOS_CONFIG)#nixosConfigurations.(hostname).config.system.build.toplevel'
 
       # Rebuild and enable nixos configuration
-      alias nixos-rb = doas nixos-rebuild boot --impure --flake /etc/nixos
+      alias nixos-rb = doas nixos-rebuild -v boot --impure --flake /etc/nixos
 
       # Rebuild and activate nixos configuration
-      alias nixos-sw = doas nixos-rebuild switch --impure --flake /etc/nixos
+      alias nixos-sw = doas nixos-rebuild -v switch --impure --flake /etc/nixos
 
       # Mount a filesystem without needing an existing directory
       alias mnt = doas mount --mkdir
@@ -112,7 +118,7 @@ in {
       def mkf [...trgs] {
         $trgs | each {|trg| $trg | path dirname | mkd $in; touch $trg }
         ignore
-        }
+      }
 
       # simpler linking
       alias ln-h = ln     # hard link 
@@ -120,7 +126,7 @@ in {
       alias ln-r = ln -sr # rela link
 
       # remove a symbolic link
-      alias rmln = unlink
+      alias rmln = str trim -r -c '/' | unlink
 
       # force remove anything and everything
       alias rmrf = rm -rf
@@ -168,6 +174,14 @@ in {
       def nsidgen [seed: string base: string = "@oid"] {
         uuidgen --sha1 --namespace $base --name $seed
       }
+
+      # probe a network host for open ports
+      def open-port-scan [ host: string = localhost ports: range = 1..65535 timeout: string = 1m ] {
+        nmap -sT --open --host-timeout $timeout $host -p $"($ports | first)-($ports | last)" | str replace -a '/tcp' "" | lines -s | skip until {|| $in == 'PORT      STATE SERVICE' } | drop 1 | str join $"\n" | detect columns | reject STATE | into int PORT
+      }
+
+      # describe top level datatype
+      def whatis [item: any = null] { $in | default $item | describe | str replace --regex '<.*' "" }
     '';
   };
 

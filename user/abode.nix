@@ -13,9 +13,10 @@ in {
   ];
 
   stylix = {
+    enable = true;
     polarity = "dark";
-    image = ./wallpaper/wp-02.png;
-	  targets.vscode.enable = false;
+    image = ./wallpaper/wp-03.jpg;
+    targets.vscode.enable = false;
   };
 
   nixpkgs.config.allowUnfree = true;
@@ -42,7 +43,7 @@ in {
     nix-prefetch
     vlc
     szyszka
-    neovim
+    # neovim
     bitwarden
     filelight
     # minecraft
@@ -52,10 +53,11 @@ in {
     yt-dlp
     ffmpeg
     gtypist
-    gnome.gnome-terminal
+    gnome-terminal
     just
     unzip
     gh
+    gh-dash
     whois
     wemux
     base16-shell-preview
@@ -67,6 +69,9 @@ in {
     dot2tex
     aria2
     axel
+    anarchism
+    monero-gui
+    monero-cli
   ];
 
   home.sessionVariables = {
@@ -158,23 +163,6 @@ in {
     enable = true;
   };
 
-  programs.fish = {
-    enable = true;
-    plugins = [
-      { name = "foreign-env"; src = pkgs.fishPlugins.foreign-env; }
-      { name = "grc"; src = pkgs.fishPlugins.grc.src; }
-    ];
-    functions = {
-      "doas" = ''
-        if test "$argv" = !!
-            eval command doas $history[1]
-        else
-            command doas $argv
-        end
-      '';
-    };
-  };
-
   programs.ssh.enable = true;
   programs.ssh.extraConfig = ''
     Host github.com
@@ -220,19 +208,20 @@ in {
 
   programs.carapace.enable = true;
   programs.carapace.enableNushellIntegration = true;
-
+  services.autorandr.enable = true;
+  programs.xplr.enable = true;
   programs.fzf.enable = true;
-  programs.zoxide.enable = true;
   programs.lf.enable = true;
   programs.rbw.enable = true;
+  programs.zoxide.enable = true;
   programs.home-manager.enable = true;
-  # programs.man.generateCaches = true;
+  programs.man.generateCaches = true;
   programs.nix-index.enable = true;
   programs.yt-dlp.enable = true;
-  services.caffeine.enable = true;
-  services.syncthing.enable = true;
-  # services.syncthing.tray.enable = true;
+  # services.syncthing.enable = true;
+  # services.caffeine.enable = true;
   # programs.atuin.enable = true;
+  # services.syncthing.tray.enable = true;
   # services.shellhub-agent.enable = true;
 
   fonts.fontconfig.enable = true;

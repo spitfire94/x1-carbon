@@ -7,6 +7,7 @@
   programs.ssh.startAgent = false;
   services.pcscd.enable = true;
   # services.yubikey-agent.enable = true;
+  services.jitterentropy-rngd.enable = true;
   hardware.gpgSmartcards.enable = true;
 
   environment.systemPackages = with pkgs; [
@@ -18,9 +19,10 @@
     signing-party
     yubico-pam
     pcsctools
+    rng-tools
     # fido2luks
     libfido2
-    step-ca
+    step-cli
     openssl
     gpg-tui
     gnupg
@@ -33,7 +35,7 @@
 
   services.openssh = {
     enable = true;
-    settings.PermitRootLogin = "no";
+    settings.PermitRootLogin = lib.mkDefault "no";
   };
 
   environment.shellInit = ''
